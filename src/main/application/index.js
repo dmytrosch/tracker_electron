@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, dialog } from "electron";
 import path from "path";
 import windowStateKeeper from "electron-window-state";
 
@@ -8,6 +8,7 @@ export default class TrackerApp {
     this.userDataDir = path.resolve(app.getPath("home"), ".tracker");
 
     app.whenReady().then(this.createWindow);
+    this.checkForTheSecondInstance()
     this.subscribeForAppEvents();
   }
 
@@ -60,5 +61,23 @@ export default class TrackerApp {
         this.createWindow();
       }
     });
+  };
+
+  checkForTheSecondInstance = () => {
+    const lock = app.requestSingleInstanceLock();
+    if (!lock) {
+      app.quit();
+    } else {
+      app.on("second-instance", () => {
+        if (this.window) {
+          this.window.show()
+          this.window.focus()
+          dialog.showErrorBox(
+            'tracker',
+            'Application has been already launched',
+          )
+        }
+      });
+    }
   };
 }
