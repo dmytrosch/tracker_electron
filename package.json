@@ -13,9 +13,10 @@
     "update-core": "git submodule update --remote --merge",
     "fetch-core": "git submodule update --init --recursive",
     "preinstall": "cd ./tracker && npm install",
+    "prebuild": "rm -rf builds/production/renderer && cd ./tracker && npm run build && cp -R ./build/ ../builds/production/renderer",
     "electron-react": "concurrently \"cd ./tracker && BROWSER=none npm start\" \"wait-on http://localhost:3000 && bozon start\""
   },
-   "dependencies": {
+  "dependencies": {
     "electron-window-state": "^5.0.3"
   },
   "devDependencies": {
