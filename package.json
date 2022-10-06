@@ -15,6 +15,9 @@
     "preinstall": "cd ./tracker && npm install",
     "electron-react": "concurrently \"cd ./tracker && BROWSER=none npm start\" \"wait-on http://localhost:3000 && bozon start\""
   },
+   "dependencies": {
+    "electron-window-state": "^5.0.3"
+  },
   "devDependencies": {
     "bozon": "1.3.3",
     "concurrently": "^7.4.0",
