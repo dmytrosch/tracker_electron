@@ -1,23 +1,35 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
+import windowStateKeeper from "electron-window-state";
 
 export default class TrackerApp {
   constructor() {
-    this.window = null
-    app.whenReady().then(this.createWindow);
+    this.window = null;
+    this.userDataDir =  path.resolve(app.getPath('home'), ".tracker")
 
+    app.whenReady().then(this.createWindow);
     this.subscribeForAppEvents();
   }
 
   createWindow = () => {
+    const mainWindowState = windowStateKeeper({
+      defaultWidth: 580,
+      defaultHeight: 760,
+      path: this.userDataDir,
+    });
+
     this.window = new BrowserWindow({
-      title: CONFIG.name,
-      width: CONFIG.width,
-      height: CONFIG.height,
+      width: mainWindowState.width,
+      height: mainWindowState.height,
+      minHeight: 600,
+      minWidth: 400,
+      x: mainWindowState.x,
+      y: mainWindowState.y,
+      show: true,
       webPreferences: {
-        worldSafeExecuteJavaScript: true,
-        preload: path.join(app.getAppPath(), "preload", "index.js"),
+        preload: path.join(__dirname, "preload.js"),
       },
+      fullscreenable: false,
     });
 
     this.window.loadURL("http://localhost:3000/");
@@ -25,6 +37,8 @@ export default class TrackerApp {
     this.window.on("closed", () => {
       this.window = null;
     });
+
+    mainWindowState.manage(this.window);
   };
 
   subscribeForAppEvents = () => {
