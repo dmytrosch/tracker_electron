@@ -1,11 +1,20 @@
 import { app, BrowserWindow, dialog } from "electron";
 import path from "path";
+import fs from 'fs'
 import windowStateKeeper from "electron-window-state";
+import TrackerStorage from "./storage";
 
 export default class TrackerApp {
   constructor() {
     this.window = null;
     this.userDataDir = path.resolve(app.getPath("home"), ".tracker");
+
+    const isDirectoryExist = fs.existsSync(this.userDataDir)
+    if(!isDirectoryExist){
+      fs.mkdirSync(this.userDataDir)
+    }
+
+    this.trackerStorage = new TrackerStorage(this.userDataDir)
 
     app.whenReady().then(this.createWindow);
     this.checkForTheSecondInstance()
@@ -13,7 +22,6 @@ export default class TrackerApp {
   }
 
   createWindow = () => {
-    console.log();
     const mainWindowState = windowStateKeeper({
       defaultWidth: 580,
       defaultHeight: 760,
