@@ -1,10 +1,11 @@
-import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, Notification } from "electron";
 import path from "path";
 import fs from "fs";
 import windowStateKeeper from "electron-window-state";
 import TrackerStorage from "./storage";
 import createAppMenu from "./menu";
 import EVENTS from "../../constants/events";
+import showNotification from "./notifications";
 
 export default class TrackerApp {
   constructor() {
@@ -63,11 +64,16 @@ export default class TrackerApp {
       this.window.webContents.send(EVENTS.LOADED, {
         trackers,
       });
+      showNotification('Welcome back!')
     });
 
     ipcMain.on(EVENTS.UPDATE_TRACKERS, (_, { trackers }) =>
       this.trackerStorage.updateTrackers(trackers)
     );
+
+    ipcMain.on(EVENTS.SHOW_NOTIFICATION, (_, { text, options }) => {
+      showNotification(text, options);
+    });
   };
 
   subscribeForAppEvents = () => {

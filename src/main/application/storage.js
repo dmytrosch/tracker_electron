@@ -1,6 +1,6 @@
-import { Notification } from "electron";
 import path from "path";
 import fs from "fs";
+import showNotification from "./notifications";
 
 export default class TrackerStorage {
   static initialStorage = {
@@ -42,6 +42,6 @@ export default class TrackerStorage {
   resetStorage = () => {
     this.writeToFile(TrackerStorage.initialStorage);
 
-    new Notification({ title: "Your data was successfully reset!" });
+    showNotification("Your data was successfully reset!");
   };
 }

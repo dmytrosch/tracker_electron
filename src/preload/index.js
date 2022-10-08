@@ -11,4 +11,7 @@ contextBridge.exposeInMainWorld("electronService", {
 
   sendUpdateTrackersListEvent: (trackers) =>
     ipcRenderer.send(EVENTS.UPDATE_TRACKERS, { trackers }),
+
+  sendShowNativeNotificationEvent: (text, options) =>
+    ipcRenderer.send(EVENTS.SHOW_NOTIFICATION, { text, options }),
 });
