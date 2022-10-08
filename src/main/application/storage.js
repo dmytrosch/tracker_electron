@@ -1,3 +1,4 @@
+import { Notification } from "electron";
 import path from "path";
 import fs from "fs";
 
@@ -27,7 +28,7 @@ export default class TrackerStorage {
     const storage = this.readFromFile();
     const newStorage = { ...storage, trackers: newTrackersList };
 
-    this.writeToFile(newStorage)
+    this.writeToFile(newStorage);
   };
 
   writeToFile = (data) => {
@@ -39,6 +40,8 @@ export default class TrackerStorage {
   };
 
   resetStorage = () => {
-    this.writeToFile(TrackerStorage.initialStorage)
-  }
+    this.writeToFile(TrackerStorage.initialStorage);
+
+    new Notification({ title: "Your data was successfully reset!" });
+  };
 }

@@ -1,23 +1,24 @@
 import { app, BrowserWindow, dialog } from "electron";
 import path from "path";
-import fs from 'fs'
+import fs from "fs";
 import windowStateKeeper from "electron-window-state";
 import TrackerStorage from "./storage";
+import createAppMenu from "./menu";
 
 export default class TrackerApp {
   constructor() {
     this.window = null;
     this.userDataDir = path.resolve(app.getPath("home"), ".tracker");
 
-    const isDirectoryExist = fs.existsSync(this.userDataDir)
-    if(!isDirectoryExist){
-      fs.mkdirSync(this.userDataDir)
+    const isDirectoryExist = fs.existsSync(this.userDataDir);
+    if (!isDirectoryExist) {
+      fs.mkdirSync(this.userDataDir);
     }
 
-    this.trackerStorage = new TrackerStorage(this.userDataDir)
+    this.trackerStorage = new TrackerStorage(this.userDataDir);
 
-    app.whenReady().then(this.createWindow);
-    this.checkForTheSecondInstance()
+    app.whenReady().then(this.onReady);
+    this.checkForTheSecondInstance();
     this.subscribeForAppEvents();
   }
 
@@ -78,14 +79,22 @@ export default class TrackerApp {
     } else {
       app.on("second-instance", () => {
         if (this.window) {
-          this.window.show()
-          this.window.focus()
+          this.window.show();
+          this.window.focus();
           dialog.showErrorBox(
-            'tracker',
-            'Application has been already launched',
-          )
+            "tracker",
+            "Application has been already launched"
+          );
         }
       });
     }
+  };
+
+  onReady = () => {
+    this.createWindow();
+    this.menu = createAppMenu({
+      window: this.window,
+      onResetData: this.trackerStorage.resetStorage,
+    });
   };
 }
