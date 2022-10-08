@@ -1,3 +1,3 @@
-import TrackerApp from "./application";
+import TrackerApp from "./application/app";
 
 new TrackerApp()

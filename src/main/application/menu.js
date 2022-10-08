@@ -1,5 +1,7 @@
 import { Menu, app, dialog } from "electron";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const getTemplate = ({ window, onResetData }) => {
   return [
     {
@@ -48,6 +50,13 @@ const getTemplate = ({ window, onResetData }) => {
         {
           role: "resetZoom",
         },
+        ...(!isProduction
+          ? [
+              {
+                role: "toggleDevTools",
+              },
+            ]
+          : []),
       ],
     },
   ];

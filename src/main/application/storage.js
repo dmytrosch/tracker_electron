@@ -36,7 +36,7 @@ export default class TrackerStorage {
   };
 
   readFromFile = () => {
-    return JSON.parse(fs.readFileSync(this.path, { encoding: "utf-8" }));
+    return JSON.parse(fs.readFileSync(this.file, { encoding: "utf-8" }));
   };
 
   resetStorage = () => {

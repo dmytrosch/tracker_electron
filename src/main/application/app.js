@@ -1,9 +1,10 @@
-import { app, BrowserWindow, dialog } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import path from "path";
 import fs from "fs";
 import windowStateKeeper from "electron-window-state";
 import TrackerStorage from "./storage";
 import createAppMenu from "./menu";
+import EVENTS from "../../constants/events";
 
 export default class TrackerApp {
   constructor() {
@@ -51,11 +52,22 @@ export default class TrackerApp {
       this.window.loadURL("http://localhost:3000/");
     }
 
+    mainWindowState.manage(this.window);
+
     this.window.on("closed", () => {
       this.window = null;
     });
 
-    mainWindowState.manage(this.window);
+    this.window.webContents.on("did-finish-load", () => {
+      const trackers = this.trackerStorage.getTrackers();
+      this.window.webContents.send(EVENTS.LOADED, {
+        trackers,
+      });
+    });
+
+    ipcMain.on(EVENTS.UPDATE_TRACKERS, (_, { trackers }) =>
+      this.trackerStorage.updateTrackers(trackers)
+    );
   };
 
   subscribeForAppEvents = () => {
