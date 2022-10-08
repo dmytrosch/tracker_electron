@@ -6,12 +6,15 @@ import { contextBridge, ipcRenderer } from "electron";
 import EVENTS from "../constants/events";
 
 contextBridge.exposeInMainWorld("electronService", {
-  addOnLoadListener: (cb) => ipcRenderer.on(EVENTS.LOADED, cb),
-  removeOnLoadListener: () => ipcRenderer.removeAllListeners(EVENTS.LOADED),
-
+  addOnLoadListener: (cb) => ipcRenderer.once(EVENTS.LOADED, cb),
   sendUpdateTrackersListEvent: (trackers) =>
     ipcRenderer.send(EVENTS.UPDATE_TRACKERS, { trackers }),
 
-  sendShowNativeNotificationEvent: (text, options) =>
-    ipcRenderer.send(EVENTS.SHOW_NOTIFICATION, { text, options }),
+  addNotificationsListener: (cb) =>
+    ipcRenderer.on(EVENTS.SHOW_NOTIFICATION, cb),
+
+  removeGlobalListeners: () => {
+    ipcRenderer.removeAllListeners(EVENTS.SHOW_NOTIFICATION);
+    ipcRenderer.removeAllListeners(EVENTS.LOADED);
+  },
 });

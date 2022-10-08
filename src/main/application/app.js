@@ -5,7 +5,6 @@ import windowStateKeeper from "electron-window-state";
 import TrackerStorage from "./storage";
 import createAppMenu from "./menu";
 import EVENTS from "../../constants/events";
-import showNotification from "./notifications";
 
 export default class TrackerApp {
   constructor() {
@@ -64,16 +63,12 @@ export default class TrackerApp {
       this.window.webContents.send(EVENTS.LOADED, {
         trackers,
       });
-      showNotification('Welcome back!')
+      this.sendNotification('Welcome back!')
     });
 
     ipcMain.on(EVENTS.UPDATE_TRACKERS, (_, { trackers }) =>
       this.trackerStorage.updateTrackers(trackers)
     );
-
-    ipcMain.on(EVENTS.SHOW_NOTIFICATION, (_, { text, options }) => {
-      showNotification(text, options);
-    });
   };
 
   subscribeForAppEvents = () => {
@@ -108,11 +103,19 @@ export default class TrackerApp {
     }
   };
 
+  sendNotification = (text) =>
+    this.window.webContents.send(EVENTS.SHOW_NOTIFICATION, { text });
+
+  onResetData = () => {
+    this.trackerStorage.resetStorage;
+    this.sendNotification("Your data was successfully reset!");
+  };
+
   onReady = () => {
     this.createWindow();
     this.menu = createAppMenu({
       window: this.window,
-      onResetData: this.trackerStorage.resetStorage,
+      onResetData: this.onResetData,
     });
   };
 }
