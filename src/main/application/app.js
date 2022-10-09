@@ -5,13 +5,15 @@ import windowStateKeeper from "electron-window-state";
 import TrackerStorage from "./storage";
 import createAppMenu from "./menu";
 import EVENTS from "../../constants/events";
-import icon from '../../../resources/icon.png'
+import icon from "../../../resources/icon.png";
 import createAppTray from "./tray";
+import { runInThisContext } from "vm";
 
 export default class TrackerApp {
   constructor() {
     this.window = null;
     this.userDataDir = path.resolve(app.getPath("home"), ".tracker");
+    this.isQuiting = false;
 
     const isDirectoryExist = fs.existsSync(this.userDataDir);
     if (!isDirectoryExist) {
@@ -26,6 +28,9 @@ export default class TrackerApp {
   }
 
   createWindow = () => {
+    if (this.window !== null) {
+      return;
+    }
     const mainWindowState = windowStateKeeper({
       defaultWidth: 580,
       defaultHeight: 760,
@@ -66,26 +71,40 @@ export default class TrackerApp {
       this.window.webContents.send(EVENTS.LOADED, {
         trackers,
       });
-      this.sendNotification('Welcome back!')
+      this.sendNotification("Welcome back!");
+    });
+
+    this.window.on("close", (e) => {
+      if (!this.isQuiting) {
+        e.preventDefault();
+        this.window.hide();
+        this.sendNotification("Keep running in the background...");
+      }
     });
 
     ipcMain.on(EVENTS.UPDATE_TRACKERS, (_, { trackers }) =>
       this.trackerStorage.updateTrackers(trackers)
     );
+
+    ipcMain.on(EVENTS.RESTORE_APP, () => {
+      if (!this.window) {
+        return;
+      }
+      this.window.show();
+    });
   };
 
   subscribeForAppEvents = () => {
-    app.on("window-all-closed", () => {
-      if (process.platform !== "darwin") {
-        app.quit();
-      }
-    });
-
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) {
         this.createWindow();
       }
     });
+    app.on("before-quit", () => {
+      this.isQuiting = true;
+    });
+
+    app.on("window-all-closed", app.quit);
   };
 
   checkForTheSecondInstance = () => {
@@ -122,6 +141,6 @@ export default class TrackerApp {
     });
     this.tray = createAppTray({
       window: this.window,
-    })
+    });
   };
 }

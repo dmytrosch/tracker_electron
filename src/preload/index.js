@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld("electronService", {
   addOnLoadListener: (cb) => ipcRenderer.once(EVENTS.LOADED, cb),
   sendUpdateTrackersListEvent: (trackers) =>
     ipcRenderer.send(EVENTS.UPDATE_TRACKERS, { trackers }),
+  sendRestoreAppMessage: () => ipcRenderer.send(EVENTS.RESTORE_APP),
 
   addNotificationsListener: (cb) =>
     ipcRenderer.on(EVENTS.SHOW_NOTIFICATION, cb),

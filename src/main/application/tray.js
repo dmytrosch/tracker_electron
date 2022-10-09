@@ -17,6 +17,7 @@ const getTemplate = ({ window }) => [
 const createAppTray = (params) => {
   const img = nativeImage.createFromPath(path.resolve(__dirname, trayIcon));
   const tray = new Tray(img);
+  tray.setToolTip('tracker')
   tray.setContextMenu(Menu.buildFromTemplate(getTemplate(params)));
   return tray;
 };
