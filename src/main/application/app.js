@@ -7,7 +7,6 @@ import createAppMenu from "./menu";
 import EVENTS from "../../constants/events";
 import icon from "../../../resources/icon.png";
 import createAppTray from "./tray";
-import { runInThisContext } from "vm";
 
 export default class TrackerApp {
   constructor() {
