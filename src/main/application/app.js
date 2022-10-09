@@ -16,6 +16,7 @@ export default class TrackerApp {
 
     const isDirectoryExist = fs.existsSync(this.userDataDir);
     if (!isDirectoryExist) {
+      this.isFirstLaunch = true;
       fs.mkdirSync(this.userDataDir);
     }
 
@@ -70,7 +71,7 @@ export default class TrackerApp {
       this.window.webContents.send(EVENTS.LOADED, {
         trackers,
       });
-      this.sendNotification("Welcome back!");
+      this.sendNotification(this.isFirstLaunch ? "Welcome!" : "Welcome back!");
     });
 
     this.window.on("close", (e) => {
