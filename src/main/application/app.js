@@ -5,6 +5,7 @@ import windowStateKeeper from "electron-window-state";
 import TrackerStorage from "./storage";
 import createAppMenu from "./menu";
 import EVENTS from "../../constants/events";
+import icon from '../../../resources/icon.png'
 
 export default class TrackerApp {
   constructor() {
@@ -38,6 +39,7 @@ export default class TrackerApp {
       x: mainWindowState.x,
       y: mainWindowState.y,
       show: true,
+      icon: path.resolve(__dirname, icon),
       webPreferences: {
         preload: path.join(app.getAppPath(), "preload/index.js"),
       },

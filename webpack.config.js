@@ -6,6 +6,21 @@ module.exports = {
     entry: './src/preload/index.js'
   },
   main: {
-    entry: './src/main/index.js'
+    entry: './src/main/index.js',
+    module: {
+      rules: [
+        {
+          test: /\.(png|jpe?g|gif)$/i,
+          use: [
+            {
+              loader: "file-loader",
+              options: {
+                name: '[path][name].[ext]'
+              }
+            },
+          ],
+        },
+      ],
+    },
   }
 }

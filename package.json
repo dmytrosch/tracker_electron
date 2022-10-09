@@ -17,7 +17,8 @@
     "dev": "concurrently --kill-others \"cd ./tracker && BROWSER=none npm start\" \"wait-on http://localhost:3000 && bozon start --reload\""
   },
   "dependencies": {
-    "electron-window-state": "^5.0.3"
+    "electron-window-state": "^5.0.3",
+    "file-loader": "^6.2.0"
   },
   "devDependencies": {
     "bozon": "1.3.3",
