@@ -1,7 +1,7 @@
 {
   "name": "tracker",
-  "version": "0.1.0",
-  "description": "Tracker application build with Electron",
+  "version": "1.0.0",
+  "description": "A simple application for tracking time",
   "author": {
     "name": "Dmytro Shcherbonos",
     "email": "dimaus.sch@gmail.com"
@@ -29,12 +29,21 @@
   },
   "build": {
     "appId": "com.electron.tracker",
-    "win": {
-      "publish": null
-    },
+    "copyright": "Copyright © 2022 Dmytro Shcherbonos",
+    "publish": [
+      {
+        "provider": "github"
+      }
+    ],
     "mac": {
-      "publish": null,
-      "category": "your.app.category.type"
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "category": "Utility",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
     }
   }
 }
