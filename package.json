@@ -10,6 +10,7 @@
   "repository": {},
   "license": "ISC",
   "scripts": {
+    "build": "bozon build production",
     "update-core": "git submodule update --remote --merge",
     "fetch-core": "git submodule update --init --recursive",
     "preinstall": "cd ./tracker && npm install",
