@@ -129,6 +129,7 @@ export default class TrackerApp {
 
   onResetData = () => {
     this.trackerStorage.resetStorage;
+    this.window.webContents.send(EVENTS.RESET_DATA);
     this.sendNotification("Your data was successfully reset!");
   };
 

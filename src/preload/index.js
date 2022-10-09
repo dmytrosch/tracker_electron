@@ -9,6 +9,9 @@ contextBridge.exposeInMainWorld("electronService", {
   addOnLoadListener: (cb) => ipcRenderer.once(EVENTS.LOADED, cb),
   sendUpdateTrackersListEvent: (trackers) =>
     ipcRenderer.send(EVENTS.UPDATE_TRACKERS, { trackers }),
+
+  addOnResetDataListener: (cb) => ipcRenderer.on(EVENTS.RESET_DATA, cb),
+
   sendRestoreAppMessage: () => ipcRenderer.send(EVENTS.RESTORE_APP),
 
   addNotificationsListener: (cb) =>
@@ -17,5 +20,6 @@ contextBridge.exposeInMainWorld("electronService", {
   removeGlobalListeners: () => {
     ipcRenderer.removeAllListeners(EVENTS.SHOW_NOTIFICATION);
     ipcRenderer.removeAllListeners(EVENTS.LOADED);
+    ipcRenderer.removeAllListeners(EVENTS.RESET_DATA);
   },
 });
