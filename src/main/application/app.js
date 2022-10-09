@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Notification } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import path from "path";
 import fs from "fs";
 import windowStateKeeper from "electron-window-state";
@@ -6,6 +6,7 @@ import TrackerStorage from "./storage";
 import createAppMenu from "./menu";
 import EVENTS from "../../constants/events";
 import icon from '../../../resources/icon.png'
+import createAppTray from "./tray";
 
 export default class TrackerApp {
   constructor() {
@@ -119,5 +120,8 @@ export default class TrackerApp {
       window: this.window,
       onResetData: this.onResetData,
     });
+    this.tray = createAppTray({
+      window: this.window,
+    })
   };
 }
