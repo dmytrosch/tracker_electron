@@ -1,27 +1,7 @@
-# TrackerElectron
+# Tracker
 
-> My TrackerElectron app built with Electron
+Tracker is electron application for MacOS, Windows and Linux for tracking time.
 
-
-## Dev
-
-```
-$ npm install
-```
-
-### Run
-
-```
-$ bozon start
-```
-
-### Package
-
-```
-$ bozon package
-```
-
-Builds the app for OS X, Linux, and Windows, using [electron-builder](https://github.com/electron-userland/electron-builder).
 
 
 ## License
