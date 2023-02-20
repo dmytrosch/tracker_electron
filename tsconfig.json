@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "sourceMap": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "outDir": "./dist"
+  },
+  "include": [
+    "src",
+    "declaration.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+  ],
+  "noImplicitAny": true
+}
