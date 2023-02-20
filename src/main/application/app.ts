@@ -63,7 +63,7 @@ export default class TrackerApp {
     const isProduction = process.env.NODE_ENV === "production";
 
     if (isProduction) {
-      this.window.loadFile(path.join(app.getAppPath(), "renderer/index.html"));
+      this.window.loadFile(path.join(app.getAppPath(), "renderer/build/index.html"));
     } else {
       this.window.loadURL("http://localhost:3000/");
     }
