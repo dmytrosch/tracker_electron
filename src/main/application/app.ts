@@ -1,18 +1,26 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
-import path from "path";
-import fs from "fs";
-import windowStateKeeper from "electron-window-state";
+import * as path from "node:path";
+import * as fs from "fs";
+import * as windowStateKeeper from "electron-window-state";
 import TrackerStorage from "./storage";
 import createAppMenu from "./menu";
-import EVENTS from "../../constants/events";
 import icon from "../../../resources/icon.png";
 import createAppTray from "./tray";
+import EVENTS from "../../constants/events";
 
 export default class TrackerApp {
+  private window: BrowserWindow | null;
+  private userDataDir: string;
+  private isQuiting: boolean;
+  private isFirstLaunch: boolean = false;
+  private trackerStorage: TrackerStorage;
+  private tray: Electron.Tray | null;
+
   constructor() {
     this.window = null;
     this.userDataDir = path.resolve(app.getPath("home"), ".tracker");
     this.isQuiting = false;
+    this.tray = null;
 
     const isDirectoryExist = fs.existsSync(this.userDataDir);
     if (!isDirectoryExist) {
@@ -27,7 +35,7 @@ export default class TrackerApp {
     this.subscribeForAppEvents();
   }
 
-  createWindow = () => {
+  private createWindow = (): void => {
     if (this.window !== null) {
       return;
     }
@@ -68,16 +76,16 @@ export default class TrackerApp {
 
     this.window.webContents.on("did-finish-load", () => {
       const trackers = this.trackerStorage.getTrackers();
-      this.window.webContents.send(EVENTS.LOADED, {
+      this.window?.webContents.send(EVENTS.LOADED, {
         trackers,
       });
       this.sendNotification(this.isFirstLaunch ? "Welcome!" : "Welcome back!");
     });
 
-    this.window.on("close", (e) => {
+    this.window.on("close", (e: Electron.Event) => {
       if (!this.isQuiting) {
         e.preventDefault();
-        this.window.hide();
+        this.window?.hide();
         this.sendNotification("Keep running in the background...");
       }
     });
@@ -87,14 +95,11 @@ export default class TrackerApp {
     );
 
     ipcMain.on(EVENTS.RESTORE_APP, () => {
-      if (!this.window) {
-        return;
-      }
-      this.window.show();
+      this.window?.show();
     });
   };
 
-  subscribeForAppEvents = () => {
+  private subscribeForAppEvents = (): void => {
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) {
         this.createWindow();
@@ -107,7 +112,7 @@ export default class TrackerApp {
     app.on("window-all-closed", app.quit);
   };
 
-  checkForTheSecondInstance = () => {
+  private checkForTheSecondInstance = (): void => {
     const lock = app.requestSingleInstanceLock();
     if (!lock) {
       app.quit();
@@ -125,23 +130,25 @@ export default class TrackerApp {
     }
   };
 
-  sendNotification = (text) =>
-    this.window.webContents.send(EVENTS.SHOW_NOTIFICATION, { text });
+  private sendNotification = (text: string): void =>
+    this.window?.webContents.send(EVENTS.SHOW_NOTIFICATION, { text });
 
-  onResetData = () => {
+  private onResetData = (): void => {
     this.trackerStorage.resetStorage();
-    this.window.webContents.send(EVENTS.RESET_DATA);
+    this.window?.webContents.send(EVENTS.RESET_DATA);
     this.sendNotification("Your data was successfully reset!");
   };
 
-  onReady = () => {
+  private onReady = () => {
     this.createWindow();
-    this.menu = createAppMenu({
-      window: this.window,
-      onResetData: this.onResetData,
-    });
-    this.tray = createAppTray({
-      window: this.window,
-    });
+    if (this.window instanceof BrowserWindow) {
+      createAppMenu({
+        window: this.window,
+        onResetData: this.onResetData,
+      });
+      this.tray = createAppTray({
+        window: this.window,
+      });
+    }
   };
 }

@@ -1,12 +1,12 @@
 module.exports = {
   renderer: {
-    entry: './src/renderer/javascripts/index.js',
+    entry: './dist/renderer/javascripts/index.js',
   },
   preload: {
-    entry: './src/preload/index.js'
+    entry: './dist/preload/index.js'
   },
   main: {
-    entry: './src/main/index.js',
+    entry: './dist/main/index.js',
     module: {
       rules: [
         {

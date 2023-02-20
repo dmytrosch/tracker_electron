@@ -1,8 +1,15 @@
 import { Menu, app, dialog } from "electron";
+import {
+  GetTemplateFuncForMenuParamsType,
+  GetTemplateFuncType,
+} from "../../constants/types";
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const getTemplate = ({ window, onResetData }) => {
+const getTemplate: GetTemplateFuncType<GetTemplateFuncForMenuParamsType> = ({
+  window,
+  onResetData,
+}) => {
   return [
     {
       label: "Application",
@@ -59,10 +66,10 @@ const getTemplate = ({ window, onResetData }) => {
           : []),
       ],
     },
-  ];
+  ] as Electron.MenuItemConstructorOptions[];
 };
 
-const createAppMenu = (params) => {
+const createAppMenu = (params: GetTemplateFuncForMenuParamsType) => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(getTemplate(params)));
 };
 

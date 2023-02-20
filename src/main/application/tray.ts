@@ -1,8 +1,14 @@
 import { nativeImage, Tray, Menu } from "electron";
-import path from "path";
+import * as path from "path";
+import {
+  GetTemplateFuncForTrayParamsType,
+  GetTemplateFuncType,
+} from "../../constants/types";
 import trayIcon from "../../../resources/tray-icon.png";
 
-const getTemplate = ({ window }) => [
+const getTemplate: GetTemplateFuncType<GetTemplateFuncForTrayParamsType> = ({
+  window,
+}) => [
   { label: "tracker", enabled: false },
   { type: "separator" },
   {
@@ -14,10 +20,10 @@ const getTemplate = ({ window }) => [
   },
 ];
 
-const createAppTray = (params) => {
+const createAppTray = (params: GetTemplateFuncForTrayParamsType): Tray => {
   const img = nativeImage.createFromPath(path.resolve(__dirname, trayIcon));
   const tray = new Tray(img);
-  tray.setToolTip('tracker')
+  tray.setToolTip("tracker");
   tray.setContextMenu(Menu.buildFromTemplate(getTemplate(params)));
   return tray;
 };

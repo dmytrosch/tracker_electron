@@ -4,17 +4,19 @@
 
 import { contextBridge, ipcRenderer } from "electron";
 import EVENTS from "../constants/events";
+import { TrackerListType } from "../constants/types";
 
-contextBridge.exposeInMainWorld("electronService", {
-  addOnLoadListener: (cb) => ipcRenderer.once(EVENTS.LOADED, cb),
-  sendUpdateTrackersListEvent: (trackers) =>
+const electronServices = {
+  addOnLoadListener: (cb: () => void) => ipcRenderer.once(EVENTS.LOADED, cb),
+  sendUpdateTrackersListEvent: (trackers: TrackerListType) =>
     ipcRenderer.send(EVENTS.UPDATE_TRACKERS, { trackers }),
 
-  addOnResetDataListener: (cb) => ipcRenderer.on(EVENTS.RESET_DATA, cb),
+  addOnResetDataListener: (cb: () => void) =>
+    ipcRenderer.on(EVENTS.RESET_DATA, cb),
 
   sendRestoreAppMessage: () => ipcRenderer.send(EVENTS.RESTORE_APP),
 
-  addNotificationsListener: (cb) =>
+  addNotificationsListener: (cb: () => void) =>
     ipcRenderer.on(EVENTS.SHOW_NOTIFICATION, cb),
 
   removeGlobalListeners: () => {
@@ -22,4 +24,6 @@ contextBridge.exposeInMainWorld("electronService", {
     ipcRenderer.removeAllListeners(EVENTS.LOADED);
     ipcRenderer.removeAllListeners(EVENTS.RESET_DATA);
   },
-});
+};
+
+contextBridge.exposeInMainWorld("electronService", electronServices);
