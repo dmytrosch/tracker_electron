@@ -2,9 +2,9 @@
 // Preload File that should be loaded into browser window instead of
 // setting nodeIntegration: true for browser window
 
-import { contextBridge, ipcRenderer } from "electron";
-import EVENTS from "../constants/events";
-import { TrackerListType } from "../constants/types";
+import { contextBridge, ipcRenderer } from 'electron';
+import EVENTS from '../constants/events';
+import { TrackerListType } from '../constants/types';
 
 const electronServices = {
   addOnLoadListener: (cb: () => void) => ipcRenderer.once(EVENTS.LOADED, cb),
@@ -26,4 +26,4 @@ const electronServices = {
   },
 };
 
-contextBridge.exposeInMainWorld("electronService", electronServices);
+contextBridge.exposeInMainWorld('electronService', electronServices);

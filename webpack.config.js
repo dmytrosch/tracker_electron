@@ -3,7 +3,7 @@ module.exports = {
     entry: './dist/renderer/javascripts/index.js',
   },
   preload: {
-    entry: './dist/preload/index.js'
+    entry: './dist/preload/index.js',
   },
   main: {
     entry: './dist/main/index.js',
@@ -13,14 +13,14 @@ module.exports = {
           test: /\.(png|jpe?g|gif)$/i,
           use: [
             {
-              loader: "file-loader",
+              loader: 'file-loader',
               options: {
-                name: '[path][name].[ext]'
-              }
+                name: '[path][name].[ext]',
+              },
             },
           ],
         },
       ],
     },
-  }
-}
+  },
+};

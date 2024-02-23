@@ -1,6 +1,6 @@
-import * as path from "path";
-import * as fs from "fs";
-import { TrackerListType } from "../../constants/types";
+import * as path from 'path';
+import * as fs from 'fs';
+import { TrackerListType } from '../../constants/types';
 
 interface ITrackerStorage {
   trackers: TrackerListType;
@@ -16,7 +16,7 @@ class TrackerStorage {
 
   constructor(dataDir: string) {
     this.dataDir = dataDir;
-    this.file = path.join(this.dataDir, "storage.json");
+    this.file = path.join(this.dataDir, 'storage.json');
 
     const isFileExist = fs.existsSync(this.file);
     if (!isFileExist) {
@@ -42,11 +42,11 @@ class TrackerStorage {
   };
 
   private writeToFile = (data: ITrackerStorage): void => {
-    fs.writeFileSync(this.file, JSON.stringify(data), { encoding: "utf-8" });
+    fs.writeFileSync(this.file, JSON.stringify(data), { encoding: 'utf-8' });
   };
 
   private readFromFile = (): ITrackerStorage => {
-    return JSON.parse(fs.readFileSync(this.file, { encoding: "utf-8" }));
+    return JSON.parse(fs.readFileSync(this.file, { encoding: 'utf-8' }));
   };
 
   public resetStorage = (): void => {

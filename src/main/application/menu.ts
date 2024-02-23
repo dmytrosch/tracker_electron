@@ -1,10 +1,10 @@
-import { Menu, app, dialog } from "electron";
+import { Menu, app, dialog } from 'electron';
 import {
   GetTemplateFuncForMenuParamsType,
   GetTemplateFuncType,
-} from "../../constants/types";
+} from '../../constants/types';
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === 'production';
 
 const getTemplate: GetTemplateFuncType<GetTemplateFuncForMenuParamsType> = ({
   window,
@@ -12,15 +12,15 @@ const getTemplate: GetTemplateFuncType<GetTemplateFuncForMenuParamsType> = ({
 }) => {
   return [
     {
-      label: "Application",
+      label: 'Application',
       submenu: [
         {
-          label: "Reset data",
+          label: 'Reset data',
           click: () => {
             const clickedButtonIndex = dialog.showMessageBoxSync(window, {
-              message: "Are sure you want to reset your data?",
-              type: "question",
-              buttons: ["OK", "Cancel"],
+              message: 'Are sure you want to reset your data?',
+              type: 'question',
+              buttons: ['OK', 'Cancel'],
               cancelId: 1,
             });
             if (clickedButtonIndex === 0) {
@@ -28,13 +28,13 @@ const getTemplate: GetTemplateFuncType<GetTemplateFuncForMenuParamsType> = ({
             }
           },
         },
-        { label: "Hide to tray", role: "close" },
+        { label: 'Hide to tray', role: 'close' },
         {
-          type: "separator",
+          type: 'separator',
         },
         {
-          label: "Quit",
-          accelerator: "CmdOrCtrl+Q",
+          label: 'Quit',
+          accelerator: 'CmdOrCtrl+Q',
           click: () => {
             app.quit();
           },
@@ -42,25 +42,25 @@ const getTemplate: GetTemplateFuncType<GetTemplateFuncForMenuParamsType> = ({
       ],
     },
     {
-      label: "Window",
+      label: 'Window',
       submenu: [
         {
-          role: "minimize",
+          role: 'minimize',
         },
         {
-          type: "separator",
+          type: 'separator',
         },
         {
-          role: "zoomIn",
+          role: 'zoomIn',
         },
-        { role: "zoomOut" },
+        { role: 'zoomOut' },
         {
-          role: "resetZoom",
+          role: 'resetZoom',
         },
         ...(!isProduction
           ? [
               {
-                role: "toggleDevTools",
+                role: 'toggleDevTools',
               },
             ]
           : []),
